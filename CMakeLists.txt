@@ -3,4 +3,4 @@ project(TechnoPark C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(TechnoPark main.c)
+add_executable(TechnoPark main.c Knight.h)

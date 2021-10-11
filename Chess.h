@@ -1,6 +1,5 @@
 #ifndef CHESS_CHESS_H
 #define CHESS_CHESS_H
-
-#include "pawn.h"
-
+#include "Pawn.h"
+#include "Knight.h"
 #endif //CHESS_CHESS_H

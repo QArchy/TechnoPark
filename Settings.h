@@ -5,6 +5,7 @@
 
 const int MAX_N = 8;
 const int PAWN_CODE = 6;
+const int KNIGHT_CODE = 5;
 
 typedef struct chess_coord {
     int digit;
@@ -45,6 +46,11 @@ void resize_array(chess_coord_array* array, int new_size) {
 
     free(tmp->coords);
     free(tmp);
+}
+
+void add_coord_to_array(chess_coord_array* array, chess_coord* coord) {
+    resize_array(array, array->size + 1);
+    array->coords[array->size - 1] = *coord;
 }
 
 void output_chess_coord(chess_coord* coord) {
