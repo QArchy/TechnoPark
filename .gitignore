@@ -9,3 +9,9 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+/.idea/misc.xml
+/.idea/modules.xml
+/cmake-build-debug/TechnoPark
+/cmake-build-debug/TechnoPark.cbp
+/.idea/TechnoPark.iml
+/.idea/vcs.xml
