@@ -15,3 +15,4 @@ _deps
 /cmake-build-debug/TechnoPark.cbp
 /.idea/TechnoPark.iml
 /.idea/vcs.xml
+.idea
