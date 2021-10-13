@@ -1,16 +1,5 @@
-#ifndef CHESS_SETTINGS_H
-#define CHESS_SETTINGS_H
-#include <stdlib.h>
-#include <stdio.h>
-
-const int MAX_N = 8;
-const int PAWN_CODE = 6;
-const int KNIGHT_CODE = 5;
-
-typedef struct chess_coord {
-    int digit;
-    int letter;
-} chess_coord;
+#ifndef TECHNOPARK_CHESS_COORD_ARRAY_H
+#define TECHNOPARK_CHESS_COORD_ARRAY_H
 
 typedef struct chess_coord_array {
     chess_coord* coords;
@@ -18,23 +7,16 @@ typedef struct chess_coord_array {
     int factual_size;
 } chess_coord_array;
 
-int check_border(chess_coord coord) {
-    if (coord.digit < 0 || coord.digit > 8)
-        return -1;
-    if (coord.letter < 0 || coord.letter > 8)
-        return -1;
-    return 1;
+void alloc_array(chess_coord_array** array, int size) {
+    (*array) = (chess_coord_array*)calloc(1, sizeof(chess_coord_array));
+    (*array)->size = size;
+    (*array)->factual_size = 0;
+    (*array)->coords = (chess_coord*)calloc((*array)->size, sizeof(chess_coord));
 }
 
-void input_chess_coord(chess_coord* coord) {
-    printf("Input digit : ");
-    scanf("%d", &coord->digit);
-    getc(stdin);
-    printf("Input letter : ");
-    char c;
-    scanf("%c", &c);
-    coord->letter = c - 64;
-    getc(stdin);
+void free_array(chess_coord_array** array) {
+    free((*array)->coords);
+    free((*array));
 }
 
 void resize_array(chess_coord_array*** array, int new_size) {
@@ -56,8 +38,7 @@ void resize_array(chess_coord_array*** array, int new_size) {
     for (int i = 0; i < (*(*array))->factual_size; i++)
         (*(*array))->coords[i] = tmp->coords[i];
 
-    free(tmp->coords);
-    free(tmp);
+    free_array(&tmp);
 }
 
 void add_coord_to_array(chess_coord_array** array, chess_coord* coord) {
@@ -66,29 +47,10 @@ void add_coord_to_array(chess_coord_array** array, chess_coord* coord) {
     (*array)->coords[(*array)->factual_size++] = *coord;
 }
 
-void output_chess_coord(chess_coord* coord) {
-    printf("Digit : %1d\t", coord->digit);
-    printf("Letter : %1c\n", coord->letter + 65);
-}
-
 void output_array(chess_coord_array* array) {
-    printf("Permutations : \n");
     for (int i = 0; i < array->size; i++) {
         output_chess_coord(&array->coords[i]);
     }
 }
 
-void print_deck() {
-    printf(" \t");
-    for (int i = 0; i < MAX_N; i++)
-        printf("%c\t", i + 65);
-    printf("\n");
-    for (int i = 0; i < MAX_N; i++) {
-        printf("%1d\t", MAX_N - i);
-        for (int j = 0; j < MAX_N; j++)
-            printf("*\t");
-        printf("\n");
-    }
-}
-
-#endif //CHESS_SETTINGS_H
+#endif //TECHNOPARK_CHESS_COORD_ARRAY_H

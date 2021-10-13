@@ -3,4 +3,4 @@ project(TechnoPark C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(TechnoPark main.c Knight.h)
+add_executable(TechnoPark main.c Knight.h chess_coord.h chess_coord_array.h chess_coord_tree.h)

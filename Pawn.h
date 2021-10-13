@@ -1,6 +1,6 @@
 #ifndef CHESS_PAWN_H
 #define CHESS_PAWN_H
-#include "Settings.h"
+#include "DataStructures.h"
 
 chess_coord get_pawn_permutations(chess_coord coord) {
     chess_coord permutation = coord;
@@ -48,7 +48,9 @@ void check_pawns_meet_function() {
     print_deck();
     chess_coord one;
     chess_coord two;
+    printf("Input first pawn coord : \n");
     input_chess_coord(&one);
+    printf("Input second pawn coord : \n");
     input_chess_coord(&two);
     chess_coord coord = get_pawns_meet_pos(one, two);
     output_chess_coord(&coord);
@@ -58,7 +60,9 @@ void check_pawn_find_way() {
     print_deck();
     chess_coord one;
     chess_coord two;
+    printf("Input first coord : \n");
     input_chess_coord(&one);
+    printf("Input first second coord : \n");
     input_chess_coord(&two);
     printf("%1d", find_pawn_way(one, two));
 }
@@ -66,6 +70,7 @@ void check_pawn_find_way() {
 void check_pawn_permutations() {
     print_deck();
     chess_coord one;
+    printf("Input pawn coord : \n");
     input_chess_coord(&one);
     chess_coord coord = get_pawn_permutations(one);
     output_chess_coord(&coord);
