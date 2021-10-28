@@ -19,31 +19,38 @@ void free_array(chess_coord_array** array) {
     free((*array));
 }
 
-void resize_array(chess_coord_array*** array, int new_size) {
-    chess_coord_array* tmp = (chess_coord_array*)calloc(1, sizeof(chess_coord_array));
-    tmp->coords = (chess_coord*)calloc((*(*array))->size, sizeof(chess_coord));
-    for (int i = 0; i < (*(*array))->size; i++) {
-        tmp->coords[i].digit = (*(*array))->coords[i].digit;
-        tmp->coords[i].letter = (*(*array))->coords[i].letter;
+void resize_array(chess_coord_array** array, int new_size) {
+    chess_coord_array* tmp;
+    alloc_array(&tmp, (*array)->size);
+    for (int i = 0; i < (*array)->factual_size; i++) {
+        tmp->coords[i].digit = (*array)->coords[i].digit;
+        tmp->coords[i].letter = (*array)->coords[i].letter;
     }
+    tmp->factual_size = (*array)->factual_size;
 
-    free((*(*array))->coords);
-    int tmp_factual_size = (*(*array))->factual_size;
-    free((*(*array)));
-    (*(*array)) = (chess_coord_array*)calloc(1, sizeof(chess_coord_array));
-    (*(*array))->size = new_size;
-    (*(*array))->factual_size = tmp_factual_size;
-    (*(*array))->coords = (chess_coord*)calloc((*(*array))->size, sizeof(chess_coord));
+    free_array(&(*array));
 
-    for (int i = 0; i < (*(*array))->factual_size; i++)
-        (*(*array))->coords[i] = tmp->coords[i];
+    (*array) = (chess_coord_array*)calloc(1, sizeof(chess_coord_array));
+    (*array)->size = new_size;
+    (*array)->coords = (chess_coord*)calloc((*array)->size, sizeof(chess_coord));
+
+    if (new_size >= tmp->factual_size) {
+        for (int i = 0; i < tmp->factual_size; i++)
+            (*array)->coords[i] = tmp->coords[i];
+        (*array)->factual_size = tmp->factual_size;
+    }
+    else {
+        for (int i = 0; i < new_size; i++)
+            (*array)->coords[i] = tmp->coords[i];
+        (*array)->factual_size = new_size;
+    }
 
     free_array(&tmp);
 }
 
 void add_coord_to_array(chess_coord_array** array, chess_coord* coord) {
     if ((*array)->factual_size == (*array)->size)
-        resize_array(&array, (*array)->size + (*array)->size / 10 + 1);
+        resize_array(&(*array), (*array)->size + (*array)->size / 10 + 1);
     (*array)->coords[(*array)->factual_size++] = *coord;
 }
 

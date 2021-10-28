@@ -7,15 +7,15 @@ typedef struct chess_coord {
 } chess_coord;
 
 void assign_coord(chess_coord* coord, int digit, int letter) {
-    (*coord).digit = digit;
-    (*coord).letter = letter;
+    coord->digit = digit;
+    coord->letter = letter;
 }
 
 void input_chess_coord(chess_coord* coord) {
-    printf("Input digit : ");
+    printf("Input digit >> ");
     scanf("%d", &coord->digit);
     getc(stdin);
-    printf("Input letter : ");
+    printf("Input letter >> ");
     char c;
     scanf("%c", &c);
     coord->letter = c - 64;
