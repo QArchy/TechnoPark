@@ -14,11 +14,18 @@ void assign_coord(chess_coord* coord, int digit, int letter) {
 void input_chess_coord(chess_coord* coord) {
     printf("Input digit >> ");
     scanf("%d", &coord->digit);
+    assert(coord->digit > 0);
+    assert(coord->digit < 9);
     getc(stdin);
     printf("Input letter >> ");
     char c;
     scanf("%c", &c);
-    coord->letter = c - 64;
+    coord->letter = 0;
+    if (c >= 65 && c <= 72)
+        coord->letter = c - 64;
+    if (c >= 97 && c <= 104)
+        coord->letter = c - 96;
+    assert(coord->letter != 0);
     getc(stdin);
 }
 

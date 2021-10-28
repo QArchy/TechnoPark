@@ -2,6 +2,7 @@
 #define CHESS_SETTINGS_H
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 #include "chess_coord.h"
 #include "chess_coord_tree.h"
 #include "chess_coord_array.h"
