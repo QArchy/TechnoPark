@@ -59,37 +59,6 @@ void add_tree_to_tree_array(chess_coord_tree_array** array, chess_coord_tree** t
     (*array)->trees[(*array)->factual_size++] = *tree;
 }
 
-void delete_duplicates(chess_coord_tree_array** array) {
-    int duplicates_counter = 0;
-    int* duplicates_indices = (int*)calloc((*array)->factual_size, sizeof(int));
-    for (int i = 0; i < (*array)->factual_size; i++)
-        for (int j = i + 1; j < (*array)->factual_size; j++)
-            if (i != j)
-                    if ((*array)->trees[i]->coord->digit == (*array)->trees[j]->coord->digit ||
-                        (*array)->trees[i]->coord->letter == (*array)->trees[j]->coord->letter)
-                        duplicates_indices[duplicates_counter++] = j;
-
-    chess_coord_tree_array* new;
-    alloc_tree_array(&new, (*array)->factual_size - duplicates_counter);
-    for (int i = 0; i < (*array)->factual_size; ++i) {
-        int bool = 1;
-        for (int j = 0; j < duplicates_counter; j++)
-            if (i == duplicates_indices[j]) {
-                bool = 0;
-                break;
-            }
-        if (bool == 1)
-            add_tree_to_tree_array(&new, &(*array)->trees[i]);
-    }
-
-    free_tree_array(&(*array));
-    alloc_tree_array(&(*array), new->size);
-    for (int i = 0; i < new->size; i++)
-        add_tree_to_tree_array(&(*array), &new->trees[i]);
-
-    free_tree_array(&new);
-}
-
 void get_level_number(chess_coord_tree** tree, int* level) {
     if(*tree == NULL)
         return;
@@ -109,6 +78,13 @@ void output_leaf(chess_coord_tree** leaf, int step) {
         printf("%d Pawn's step#%d\n", (*leaf)->info.num_figure, step);
     else if ((*leaf)->info.figure_code == KNIGHT)
         printf("%d Knight's step#%d\n", (*leaf)->info.num_figure, step);
+    else if ((*leaf)->info.figure_code == KING)
+        printf("%d King's step#%d\n", (*leaf)->info.num_figure, step);
+    else if ((*leaf)->info.figure_code == QUEEN)
+        printf("%d Queen's step#%d\n", (*leaf)->info.num_figure, step);
+    else if ((*leaf)->info.figure_code == BISHOP)
+        printf("%d Bishop's step#%d\n", (*leaf)->info.num_figure, step);
+    else printf("%d Rook's step#%d\n", (*leaf)->info.num_figure, step);
 
     for (int i = 0; i < step; i++)
         putchar('\t');

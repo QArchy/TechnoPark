@@ -3,12 +3,12 @@
 #pragma region Constants
 const int MIN_N = 1;
 const int MAX_N = 8;
-const int PAWN = 1; // 3 bit
-const int KNIGHT = 2; // 4 bit
-const int KING = 3; // 5 bit
-const int QUEEN = 4; // 6 bit
-const int BISHOP = 5; // 7 bit
-const int ROOK = 6; // 8 bit
+const int PAWN = 1;
+const int KNIGHT = 2;
+const int KING = 3;
+const int QUEEN = 4;
+const int BISHOP = 5;
+const int ROOK = 6;
 #pragma endregion
 
 #include "DataStructures.h"
@@ -16,9 +16,9 @@ const int ROOK = 6; // 8 bit
 #pragma region Standart_Functions
 int check_border(const chess_coord coord) {
     if (coord.digit < MIN_N || coord.digit > MAX_N)
-        return -1;
+        return 0;
     if (coord.letter < MIN_N || coord.letter > MAX_N)
-        return -1;
+        return 0;
     return 1;
 }
 
@@ -118,26 +118,270 @@ chess_coord_array* get_knight_permutations(const chess_coord coord) {
     return array;
 }
 
+chess_coord_array* get_king_permutations(const chess_coord coord) {
+    chess_coord_array* array;
+    alloc_array(&array, 0);
+    chess_coord tmp = coord;
+
+    tmp.digit = coord.digit + 1;
+    tmp.letter = coord.letter + 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.digit = coord.digit + 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.digit = coord.digit + 1;
+    tmp.letter = coord.letter - 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.letter = coord.letter - 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.digit = coord.digit - 1;
+    tmp.letter = coord.letter - 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.digit = coord.digit - 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.digit = coord.digit - 1;
+    tmp.letter = coord.letter + 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+    tmp = coord;
+
+    tmp.letter = coord.letter + 1;
+    if (check_border(tmp) == 1)
+        add_coord_to_array(&array, &tmp);
+
+    return array;
+}
+
+chess_coord_array* get_queen_permutations(const chess_coord coord) {
+    chess_coord_array* array;
+    alloc_array(&array, 0);
+    chess_coord tmp = coord;
+
+    // bishop permutations
+    while(1) {
+        tmp.letter--;
+        tmp.digit--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.letter++;
+        tmp.digit++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit++;
+        tmp.letter--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit--;
+        tmp.letter++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    //rook permutations
+    while(1) {
+        tmp.letter--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.letter++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+
+    return array;
+}
+
+chess_coord_array* get_bishop_permutations(const chess_coord coord) {
+    chess_coord_array* array;
+    alloc_array(&array, 0);
+    chess_coord tmp = coord;
+
+    while(1) {
+        tmp.letter--;
+        tmp.digit--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.letter++;
+        tmp.digit++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit++;
+        tmp.letter--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit--;
+        tmp.letter++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+
+    return array;
+}
+
+chess_coord_array* get_rook_permutations(const chess_coord coord) {
+    chess_coord_array* array;
+    alloc_array(&array, 0);
+    chess_coord tmp = coord;
+
+    while(1) {
+        tmp.letter--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.letter++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit--;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+    tmp = coord;
+
+    while(1) {
+        tmp.digit++;
+        if (check_border(tmp) == 0)
+            break;
+        add_coord_to_array(&array, &tmp);
+    }
+
+    return array;
+}
+
 chess_coord_array* get_permutations(const chess_coord coord, figure_info info) {
     if (info.figure_code == PAWN)
         return get_pawn_permutations(coord, info);
     else if (info.figure_code == KNIGHT)
         return get_knight_permutations(coord);
+    else if (info.figure_code == KING)
+        return get_king_permutations(coord);
+    else if (info.figure_code == QUEEN)
+        return get_queen_permutations(coord);
+    else if (info.figure_code == BISHOP)
+        return get_bishop_permutations(coord);
+    else if (info.figure_code == ROOK)
+        return get_rook_permutations(coord);
+
     return NULL;
 }
 #pragma endregion
 
 #pragma region MeetAlgo
+int compare_parents(chess_coord_tree** tree_1, chess_coord_tree** tree_2) {
+    if ((*tree_1) == NULL || (*tree_2) == NULL)
+        return 0;
+    if ((*tree_1)->coord->digit == (*tree_2)->coord->digit && (*tree_1)->coord->letter == (*tree_2)->coord->letter)
+        return compare_parents(&(*tree_1)->parent, &(*tree_2)->parent);
+    else
+        return 1;
+}
+
 void compare_steps(chess_coord_tree_array** first_permutations, chess_coord_tree_array** second_permutations, chess_coord_tree_array** array, int whose_move) {
     for (int i = 0; i < (*first_permutations)->factual_size; i++)
         for (int j = 0; j < (*second_permutations)->factual_size; j++) {
             if ((*first_permutations)->trees[i]->coord->digit != (*second_permutations)->trees[j]->coord->digit ||
                 (*first_permutations)->trees[i]->coord->letter != (*second_permutations)->trees[j]->coord->letter)
                 continue;
-            if (whose_move == 1)
-                add_tree_to_tree_array(&(*array), &(*first_permutations)->trees[i]);
-            else
-                add_tree_to_tree_array(&(*array), &(*second_permutations)->trees[j]);
+            if (whose_move == 1) {
+                int bool = 1;
+                for (int k = 0; k < (*array)->factual_size; k++)
+                    if (compare_parents(&(*first_permutations)->trees[i], &(*array)->trees[k]) == 0) {
+                        bool = 0;
+                        break;
+                    }
+                if (bool == 1)
+                    add_tree_to_tree_array(&(*array), &(*first_permutations)->trees[i]);
+            }
+            else {
+                int bool = 1;
+                for (int k = 0; k < (*array)->factual_size; k++)
+                    if (compare_parents(&(*first_permutations)->trees[j], &(*array)->trees[k]) == 0) {
+                        bool = 0;
+                        break;
+                    }
+                if (bool == 1)
+                    add_tree_to_tree_array(&(*array), &(*second_permutations)->trees[j]);
+            }
         }
 }
 
@@ -193,10 +437,8 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
             return NULL;
         }
         compare_steps(&one_level_array, &two_level_array, &array, 2);
-        if (array->factual_size != 0) {
-            delete_duplicates(&array);
+        if (array->factual_size != 0)
             return array;
-        }
 
         //сравнение хода i + 1 первого коня с ходом i + 1 второго
         free_tree_array(&one_level_array);
@@ -214,7 +456,6 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
         free_tree_array(&two_level_array);
     }
 
-    delete_duplicates(&array);
     return array;
 }
 #pragma endregion
@@ -228,12 +469,26 @@ void check_permutations(figure_info figure) {
         printf("Input pawn coord : \n");
     else if (figure.figure_code == KNIGHT)
         printf("Input knight coord : \n");
+    else if (figure.figure_code == KING)
+        printf("Input king coord : \n");
+    else if (figure.figure_code == QUEEN)
+        printf("Input queen coord : \n");
+    else if (figure.figure_code == BISHOP)
+        printf("Input bishop coord : \n");
+    else printf("Input rook coord : \n");
     input_chess_coord(&one);
 
     if (figure.figure_code == PAWN)
         printf("Pawn's permutations : \n");
     else if (figure.figure_code == KNIGHT)
         printf("Knight's permutations : \n");
+    else if (figure.figure_code == KING)
+        printf("King's permutations : \n");
+    else if (figure.figure_code == QUEEN)
+        printf("Queen's permutations : \n");
+    else if (figure.figure_code == BISHOP)
+        printf("Bishop's permutations : \n");
+    else printf("Rook's permutations : \n");
 
     chess_coord_array* coord = get_permutations(one, figure);
     output_array(&coord);
@@ -255,6 +510,13 @@ void check_meet_pos(figure_info first_figure, figure_info second_figure) {
         printf("Input first figure (pawn) coord : \n");
     else if (first_figure.figure_code == KNIGHT)
         printf("Input first figure (knight) coord : \n");
+    else if (first_figure.figure_code == KING)
+        printf("Input first figure (king) coord : \n");
+    else if (first_figure.figure_code == QUEEN)
+        printf("Input first figure (queen) coord : \n");
+    else if (first_figure.figure_code == BISHOP)
+        printf("Input first figure (bishop) coord : \n");
+    else printf("Input first figure (rook) coord : \n");
     input_chess_coord(&one);
 
     chess_coord two;
@@ -262,6 +524,13 @@ void check_meet_pos(figure_info first_figure, figure_info second_figure) {
         printf("Input second figure (pawn) coord : \n");
     else if (second_figure.figure_code == KNIGHT)
         printf("Input second figure (knight) coord : \n");
+    else if (second_figure.figure_code == KING)
+        printf("Input second figure (king) coord : \n");
+    else if (second_figure.figure_code == QUEEN)
+        printf("Input second figure (queen) coord : \n");
+    else if (second_figure.figure_code == BISHOP)
+        printf("Input second figure (bishop) coord : \n");
+    else printf("Input second figure (rook) coord : \n");
     input_chess_coord(&two);
 
     chess_coord_tree_array* array = get_meet_pos(one, first_figure, two, second_figure);
