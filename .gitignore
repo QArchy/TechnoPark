@@ -17,3 +17,4 @@ _deps
 /.idea/vcs.xml
 .idea
 .~дготовка к основной программе.docx
+/cmake-build-debug/Output.txt
