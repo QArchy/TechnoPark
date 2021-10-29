@@ -421,11 +421,11 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
         alloc_tree_array(&one_level_array, 0);
         alloc_tree_array(&two_level_array, 0);
 
-        //сравнение хода i первого коня с ходом i + 1 второго
+        //сравнение хода i первой фигуры с ходом i + 1 второй
         form_new_move(&second_tree, i);
         get_move(&first_tree, &one_level_array, i);
         get_move(&second_tree, &two_level_array, i + 1);
-        if (two_level_array->factual_size == 0) {// вторая пешка достигла границы
+        if (two_level_array->factual_size == 0) { // вторая пешка достигла границы
             free_tree_array(&one_level_array);
             free_tree_array(&two_level_array);
             free_tree(&first_tree);
@@ -436,7 +436,7 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
         if (array->factual_size != 0)
             return array;
 
-        //сравнение хода i + 1 первого коня с ходом i + 1 второго
+        //сравнение хода i + 1 первой фигуры с ходом i + 1 второй
         free_tree_array(&one_level_array);
         free_tree_array(&two_level_array);
         alloc_tree_array(&one_level_array, 0);
