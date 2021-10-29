@@ -10,9 +10,7 @@ const int QUEEN = 4;
 const int BISHOP = 5;
 const int ROOK = 6;
 #pragma endregion
-
 #include "DataStructures.h"
-
 #pragma region Standart_Functions
 int check_border(const chess_coord coord) {
     if (coord.digit < MIN_N || coord.digit > MAX_N)
@@ -40,7 +38,6 @@ void print_deck() {
     printf("\n");
 }
 #pragma endregion
-
 #pragma region Permutations
 chess_coord_array* get_pawn_permutations(const chess_coord coord, figure_info info) {
     chess_coord_array* array;
@@ -345,7 +342,6 @@ chess_coord_array* get_permutations(const chess_coord coord, figure_info info) {
     return NULL;
 }
 #pragma endregion
-
 #pragma region MeetAlgo
 int compare_parents(chess_coord_tree** tree_1, chess_coord_tree** tree_2) {
     if ((*tree_1) == NULL || (*tree_2) == NULL)
@@ -459,7 +455,6 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
     return array;
 }
 #pragma endregion
-
 #pragma region FindWay
 void compare_step (chess_coord_tree_array** permutations, chess_coord coord, chess_coord_tree_array** array) {
     for (int i = 0; i < (*permutations)->factual_size; i++)
@@ -499,7 +494,6 @@ chess_coord_tree_array* get_way(chess_coord coord, chess_coord aim, figure_info 
     return array;
 }
 #pragma endregion
-
 #pragma region Check
 void check_permutations() {
     print_deck();
