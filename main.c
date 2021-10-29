@@ -1,7 +1,9 @@
 #include "Chess.h"
 
 int main() {
-    //check_permutations();
-    check_meet_pos();
+    while (1) {
+        check_permutations();
+        check_meet_pos();
+    }
     return 0;
 }

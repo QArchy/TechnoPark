@@ -461,8 +461,10 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
 #pragma endregion
 
 #pragma region Check
-void check_permutations(figure_info figure) {
+void check_permutations() {
     print_deck();
+    figure_info figure;
+    input_figure_info(&figure);
 
     chess_coord one;
     if (figure.figure_code == PAWN)

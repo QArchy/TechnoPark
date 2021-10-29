@@ -55,7 +55,7 @@ void add_coord_to_array(chess_coord_array** array, chess_coord* coord) {
 }
 
 void output_array(chess_coord_array** array) {
-    for (int i = 0; i < (*array)->size; i++) {
+    for (int i = 0; i < (*array)->factual_size; i++) {
         output_chess_coord(&(*array)->coords[i]);
     }
 }
