@@ -495,30 +495,46 @@ void check_permutations(figure_info figure) {
     free_array(&coord);
 }
 
-void check_meet_pos(figure_info first_figure, figure_info second_figure) {
+void check_meet_pos() {
     print_deck();
+    figure_info first_figure;
+    figure_info second_figure;
     first_figure.num_figure = 1;
     second_figure.num_figure = 2;
 
-    if (second_figure.figure_code == PAWN)
-        printf("Attention : [%d]pawn moves first\n", 2);
-    else if (second_figure.figure_code == KNIGHT)
-        printf("Attention : [%d]knight moves first\n", 2);
-
+    input_figure_info(&first_figure);
     chess_coord one;
-    if (first_figure.figure_code == PAWN)
+    if (first_figure.figure_code == PAWN) {
         printf("Input first figure (pawn) coord : \n");
-    else if (first_figure.figure_code == KNIGHT)
+    }
+    else if (first_figure.figure_code == KNIGHT) {
         printf("Input first figure (knight) coord : \n");
-    else if (first_figure.figure_code == KING)
+    }
+    else if (first_figure.figure_code == KING) {
         printf("Input first figure (king) coord : \n");
-    else if (first_figure.figure_code == QUEEN)
+    }
+    else if (first_figure.figure_code == QUEEN) {
         printf("Input first figure (queen) coord : \n");
-    else if (first_figure.figure_code == BISHOP)
+    }
+    else if (first_figure.figure_code == BISHOP) {
         printf("Input first figure (bishop) coord : \n");
+    }
     else printf("Input first figure (rook) coord : \n");
     input_chess_coord(&one);
 
+    if (first_figure.figure_code == PAWN)
+        printf("Attention : [%d]pawn moves first\n", 1);
+    else if (first_figure.figure_code == KNIGHT)
+        printf("Attention : [%d]knight moves first\n", 1);
+    else if (first_figure.figure_code == KING)
+        printf("Attention : [%d]king moves first\n", 1);
+    else if (first_figure.figure_code == QUEEN)
+        printf("Attention : [%d]queen moves first\n", 1);
+    else if (first_figure.figure_code == BISHOP)
+        printf("Attention : [%d]bishop moves first\n", 1);
+    else printf("Attention : [%d]rook moves first\n", 1);
+
+    input_figure_info(&second_figure);
     chess_coord two;
     if (second_figure.figure_code == PAWN)
         printf("Input second figure (pawn) coord : \n");
@@ -533,7 +549,8 @@ void check_meet_pos(figure_info first_figure, figure_info second_figure) {
     else printf("Input second figure (rook) coord : \n");
     input_chess_coord(&two);
 
-    chess_coord_tree_array* array = get_meet_pos(one, first_figure, two, second_figure);
+    // reverse ввода так как алгоритм просчитывает сначала ход второй фигуры
+    chess_coord_tree_array* array = get_meet_pos(two, second_figure, one, first_figure);
     if (array == NULL)
         printf("Figures unable to meet\n");
     else {

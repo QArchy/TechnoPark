@@ -10,7 +10,7 @@ typedef struct figure_info {
 } figure_info;
 
 void input_figure_info(figure_info* info) {
-    printf("Input figure name : ");
+    printf("Input figure name (in english) : ");
     char figure_name[7];
     scanf("%s", figure_name);
 
@@ -36,7 +36,7 @@ void input_figure_info(figure_info* info) {
     assert(info->figure_code != 0);
 
     if (info->figure_code == PAWN) {
-        printf("Input pawn direction : ");
+        printf("Input pawn direction (up/down) : ");
         char direction[5];
         scanf("%s", direction);
 
