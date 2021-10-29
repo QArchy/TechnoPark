@@ -14,8 +14,8 @@ void assign_coord(chess_coord* coord, int digit, int letter) {
 void input_chess_coord(chess_coord* coord) {
     printf("Input digit >> ");
     scanf("%d", &coord->digit);
-    assert(coord->digit > 0);
-    assert(coord->digit < 9);
+    assert(coord->digit >= MIN_N);
+    assert(coord->digit <= MAX_N);
     getc(stdin);
     printf("Input letter >> ");
     char c;

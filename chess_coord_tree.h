@@ -6,10 +6,10 @@ typedef struct chess_coord_tree {
     int num_children;
     struct chess_coord_tree** children;
     struct chess_coord_tree* parent;
-    int info;
+    figure_info info;
 } chess_coord_tree;
 
-void alloc_tree(chess_coord_tree** tree, chess_coord* coord, chess_coord_tree** parent, int info, int num_children) {
+void alloc_tree(chess_coord_tree** tree, chess_coord* coord, chess_coord_tree** parent, figure_info info, int num_children) {
     (*tree) = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     (*tree)->coord = (chess_coord*)calloc(1, sizeof(chess_coord));
 

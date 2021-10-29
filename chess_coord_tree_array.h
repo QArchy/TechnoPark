@@ -97,26 +97,29 @@ void get_level_number(chess_coord_tree** tree, int* level) {
     get_level_number(&(*tree)->parent, &(*level));
 }
 
-void output_leaf(chess_coord_tree** leaf, int step, int CODE) {
+void output_leaf(chess_coord_tree** leaf, int step) {
     if ((*leaf) == NULL)
         return;
-    output_leaf(&(*leaf)->parent, step - 1, CODE);
+    output_leaf(&(*leaf)->parent, step - 1);
 
-    if (CODE == 2) {
-        for (int i = 0; i < step - 1; i++)
-            putchar('\t');
-        printf("%d Knight's step#%d\n", (*leaf)->info, step);
-    }
+    for (int i = 0; i < step - 1; i++)
+        putchar('\t');
+
+    if ((*leaf)->info.figure_code == PAWN)
+        printf("%d Pawn's step#%d\n", (*leaf)->info.num_figure, step);
+    else if ((*leaf)->info.figure_code == KNIGHT)
+        printf("%d Knight's step#%d\n", (*leaf)->info.num_figure, step);
+
     for (int i = 0; i < step; i++)
         putchar('\t');
     output_chess_coord((*leaf)->coord);
 }
 
-void output_tree_array(chess_coord_tree_array** array, int CODE) {
+void output_tree_array(chess_coord_tree_array** array) {
     for (int i = 0; i < (*array)->factual_size; i++) {
         int step = 0;
         get_level_number(&(*array)->trees[i], &step);
-        output_leaf(&(*array)->trees[i], step, CODE);
+        output_leaf(&(*array)->trees[i], step);
         putchar('\n');
     }
 }
