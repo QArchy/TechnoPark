@@ -40,9 +40,11 @@ void resize(Array* arr, const size_t new_size) { //
         arr->factual_size = tmp.factual_size;
     }
     else {
-        for (int i = 0; i < arr->size; i++)
-            arr->array[i] = tmp.array[i];
-        arr->factual_size = arr->size;
+        if (tmp.factual_size != 0) {
+            for (int i = 0; i < arr->size; i++)
+                arr->array[i] = tmp.array[i];
+            arr->factual_size = arr->size;
+        }
     }
 
     free_int_array(&tmp);
@@ -50,8 +52,43 @@ void resize(Array* arr, const size_t new_size) { //
 
 void add(Array* arr, int el) {
     if (arr->factual_size == arr->size)
-        resize(arr, arr->size / 2 + 1);
+        resize(arr, arr->size + arr->size / 2 + 1);
     arr->array[arr->factual_size++] = el;
+}
+
+void test_int_array_functions() {
+    Array arr;
+    alloc_int_array(&arr, 10);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    resize(&arr, 0);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    resize(&arr, 5);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    add(&arr, 4);
+    add(&arr, 3);
+    add(&arr, 1000);
+    add(&arr, -1235);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    resize(&arr, arr.size - 2);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    resize(&arr, arr.factual_size + 2);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
+
+    add(&arr, -1);
+    add(&arr, -1);
+    add(&arr, -1);
+    print_array(&arr);
+    printf("Array size = [%zu]\tArray factual size = [%zu]\n\n", arr.size, arr.factual_size);
 }
 
 #endif //TECHNOPARK_ARRAY_H
