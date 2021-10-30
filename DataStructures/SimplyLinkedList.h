@@ -13,21 +13,21 @@ typedef struct SimplyLinkedList {
     SimplyLinkedListNode* tail;
 } SimplyLinkedList;
 
-void init_list(SimplyLinkedList* lst) {
+void init_slist(SimplyLinkedList* lst) {
     lst->tail = lst->head = (SimplyLinkedListNode*)calloc(1, sizeof(SimplyLinkedListNode));
     lst->head->pnext = NULL;
 }
 
-void add(SimplyLinkedList* lst, int el) {
+void add_to_slist(SimplyLinkedList* lst, int el) {
     lst->tail->pnext = (SimplyLinkedListNode*)calloc(1, sizeof(SimplyLinkedListNode));
     lst->tail->data = el;
     lst->tail = lst->tail->pnext;
     lst->tail->pnext = NULL;
 }
 
-int contains(SimplyLinkedList* lst, int el) {
+int slist_contains(SimplyLinkedList* lst, int el) {
     SimplyLinkedListNode* tmp = lst->head;
-    while (tmp != NULL) {
+    while (tmp != lst->tail) {
         if (tmp->data == el)
             return 1;
         tmp = tmp->pnext;
@@ -35,8 +35,20 @@ int contains(SimplyLinkedList* lst, int el) {
     return -1;
 }
 
-void clear(SimplyLinkedList* lst) {
-    while (lst->head != NULL) {
+int slist_assign(SimplyLinkedList* lst, size_t ind, int el) {
+    SimplyLinkedListNode* tmp = lst->head;
+    while (ind != 1) {
+        if (tmp == lst->tail)
+            return -1;
+        tmp = tmp->pnext;
+        ind--;
+    }
+    tmp->data = el;
+    return 1;
+}
+
+void slist_clear(SimplyLinkedList* lst) {
+    while (lst->head != lst->tail) {
         SimplyLinkedListNode* tmp = lst->head;
         lst->head = lst->head->pnext;
         free(tmp);
@@ -44,17 +56,18 @@ void clear(SimplyLinkedList* lst) {
     lst->tail = lst->head;
 }
 
-int remove_el(SimplyLinkedList* lst, int el) {
+int slist_remove_el(SimplyLinkedList* lst, int el) {
     if (lst->head == lst->tail)
         return -1;
     if (lst->head->data == el) { // если элемент в начале
-        if (lst->head == lst->tail) { // и единстенный
+        if (lst->head->pnext == lst->tail) { // и единстенный
             free(lst->head);
-            lst->tail = lst->head = NULL;
+            lst->head = lst->tail;
             return 1;
         }
         SimplyLinkedListNode* tmp = lst->head;
         lst->head = lst->head->pnext;
+        free(tmp);
         return 1;
     }
 
@@ -76,7 +89,7 @@ int remove_el(SimplyLinkedList* lst, int el) {
     return 1;
 }
 
-void printlst(SimplyLinkedList* lst) {
+void print_slist(SimplyLinkedList* lst) {
     if (lst->head == lst->tail) {
         printf("List is empty\n");
         return;
@@ -92,60 +105,60 @@ void printlst(SimplyLinkedList* lst) {
 
 void test_SimplyLinkedList() {
     SimplyLinkedList lst;
-    init_list(&lst);
-    printlst(&lst);
+    init_slist(&lst);
+    print_slist(&lst);
     putchar('\n');
 
-    clear(&lst);
-    init_list(&lst);
-    printlst(&lst);
+    slist_clear(&lst);
+    init_slist(&lst);
+    print_slist(&lst);
     putchar('\n');
 
-    printf("List remove [%d] ? >> [%d]\n", 34, remove_el(&lst, 34));
-    printlst(&lst);
+    printf("List remove [%d] ? >> [%d]\n", 34, slist_remove_el(&lst, 34));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("List contains [%d] ? >> [%d]\n", 34, contains(&lst, 34));
-    printlst(&lst);
+    printf("List contains [%d] ? >> [%d]\n", 34, slist_contains(&lst, 34));
+    print_slist(&lst);
     putchar('\n');
 
-    add(&lst, 0);
-    add(&lst, 1);
-    add(&lst, 2);
-    add(&lst, 3);
-    add(&lst, 4);
-    add(&lst, 5);
-    add(&lst, 6);
-    printlst(&lst);
+    add_to_slist(&lst, 0);
+    add_to_slist(&lst, 1);
+    add_to_slist(&lst, 2);
+    add_to_slist(&lst, 3);
+    add_to_slist(&lst, 4);
+    add_to_slist(&lst, 5);
+    add_to_slist(&lst, 6);
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList remove [%d] ? >> [%d]\n", 0, remove_el(&lst, 0));
-    printlst(&lst);
+    printf("\nList remove [%d] ? >> [%d]\n", 0, slist_remove_el(&lst, 0));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList remove [%d] ? >> [%d]\n", 6, remove_el(&lst, 6));
-    printlst(&lst);
+    printf("\nList remove [%d] ? >> [%d]\n", 6, slist_remove_el(&lst, 6));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList remove [%d] ? >> [%d]\n", 3, remove_el(&lst, 3));
-    printlst(&lst);
+    printf("\nList remove [%d] ? >> [%d]\n", 3, slist_remove_el(&lst, 3));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList contains [%d] ? >> [%d]\n", 1, contains(&lst, 1));
-    printlst(&lst);
+    printf("\nList contains [%d] ? >> [%d]\n", 1, slist_contains(&lst, 1));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList contains [%d] ? >> [%d]\n", 5, contains(&lst, 5));
-    printlst(&lst);
+    printf("\nList contains [%d] ? >> [%d]\n", 5, slist_contains(&lst, 5));
+    print_slist(&lst);
     putchar('\n');
 
-    printf("\nList contains [%d] ? >> [%d]\n", 2, contains(&lst, 2));
-    printlst(&lst);
+    printf("\nList contains [%d] ? >> [%d]\n", 2, slist_contains(&lst, 2));
+    print_slist(&lst);
     putchar('\n');
 
-    clear(&lst);
-    init_list(&lst);
-    printlst(&lst);
+    slist_clear(&lst);
+    init_slist(&lst);
+    print_slist(&lst);
     putchar('\n');
 }
 
