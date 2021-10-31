@@ -12,10 +12,8 @@ typedef struct chess_coord_tree {
 void alloc_tree(chess_coord_tree* tree, chess_coord coord, chess_coord_tree* parent,
                 figure_info info, size_t num_children) {
     tree->parent = parent; // записываем указатель на родителя
-
     tree->coord = coord; // записываем координату (ход)
     tree->info = info; // и информацию о фигуре
-
     tree->num_children = num_children; // выделяем массив указателей на потомков
     tree->children = (chess_coord_tree**)calloc(tree->num_children, sizeof(chess_coord_tree*));
 }

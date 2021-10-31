@@ -4,54 +4,54 @@
 #include <stdlib.h>
 
 typedef struct IntArray {
-    int* array;
-    size_t size;
-    size_t factual_size;
+    int* array; // динамический массив типа int
+    size_t size; // размер (сколько выделено)
+    size_t factual_size; // фактический размер (сколько записано)
 } IntArray;
 
 void alloc_int_array(IntArray* arr, const size_t size) {
-    arr->size = size;
-    arr->factual_size = 0;
-    arr->array = (int*)calloc(arr->size, sizeof(int));
+    arr->size = size; // записываем размер
+    arr->factual_size = 0; // в массиве нет элементов
+    arr->array = (int*)calloc(arr->size, sizeof(int)); // выделяем память
 }
 
 void free_int_array(const IntArray* arr) {
-    free(arr->array);
+    free(arr->array); // освобождаем память из под массива
 }
 
 void print_int_array(const IntArray* arr) {
-    for (size_t i = 0; i < arr->factual_size; i++)
+    for (size_t i = 0; i < arr->factual_size; i++) // выводим каждый элемент
         printf("IntArray[%zu] = %d\n", i, arr->array[i]);
 }
 
 void resize_int_array(IntArray* arr, const size_t new_size) { //
-    IntArray tmp;
+    IntArray tmp; // создаем временный массив
     alloc_int_array(&tmp, arr->size);
-    tmp.factual_size = arr->factual_size;
+    tmp.factual_size = arr->factual_size; // копируем в него исходный
     for (size_t i = 0; i < tmp.size; i++) {
         tmp.array[i] = arr->array[i];
     }
 
-    free_int_array(arr);
-    alloc_int_array(arr, new_size);
+    free_int_array(arr); // чистим и снова инициализируем
+    alloc_int_array(arr, new_size); // исходный массив
 
-    if (tmp.factual_size != 0) {
-        if (new_size >= tmp.size)
-            for (int i = 0; i < tmp.size; i++)
-                arr->array[i] = tmp.array[i];
-        else
-            for (int i = 0; i < arr->size; i++)
-                arr->array[i] = tmp.array[i];
+    if (tmp.factual_size != 0) { // если есть что копировать
+        if (new_size >= tmp.size) // если увеличиваем размер
+            for (int i = 0; i < tmp.size; i++) // копируем все из
+                arr->array[i] = tmp.array[i]; // временного
+        else // ели уменьшаем размер
+            for (int i = 0; i < arr->size; i++) // копируем n = new_size
+                arr->array[i] = tmp.array[i]; // элементов
     }
     arr->factual_size = tmp.factual_size;
 
-    free_int_array(&tmp);
+    free_int_array(&tmp); // чистим временный массив
 }
 
 void add_to_int_array(IntArray* arr, int el) {
-    if (arr->factual_size == arr->size)
-        resize_int_array(arr, arr->size + arr->size / 2 + 1);
-    arr->array[arr->factual_size++] = el;
+    if (arr->factual_size == arr->size) // если места нет
+        resize_int_array(arr, arr->size + arr->size / 2 + 1); // увеличиваем размер
+    arr->array[arr->factual_size++] = el; // добавляем элемент
 }
 
 void test_int_array() {

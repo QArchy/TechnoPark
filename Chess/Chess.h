@@ -352,33 +352,42 @@ u_char compare_parents(chess_coord_tree* tree_1, chess_coord_tree* tree_2) {
         return 1; // ура, деревья различаются
 }
 
-void compare_steps(chess_coord_tree_array* first_permutations, chess_coord_tree_array* second_permutations,
-                   chess_coord_tree_array* array, size_t whose_move) {
-    for (size_t i = 0; i < first_permutations->factual_size; i++) // идем во первому массиву и сравниваем каждый
-        for (size_t j = 0; j < second_permutations->factual_size; j++) { // элемент с элементами второго
-            if (compare_coords(first_permutations->trees[i]->coord, second_permutations->trees[j]->coord) == 0)
+void compare_steps(chess_coord_tree_array* first_permutations, chess_coord_tree_array*
+                   second_permutations, chess_coord_tree_array* array, size_t whose_move) {
+    // идем во первому массиву и сравниваем каждый
+    for (size_t i = 0; i < first_permutations->factual_size; i++)
+        // элемент с элементами второго
+        for (size_t j = 0; j < second_permutations->factual_size; j++) {
+            if (compare_coords(first_permutations->trees[i]->coord, s
+                econd_permutations->trees[j]->coord) == 0)
                 continue; // если координаты не свопали - идем дальше
             if (whose_move == 1) { // смотрим чей ход
                 u_char bool = 1; // исключаем дубликаты
-                for (size_t k = 0; k < array->factual_size && k < first_permutations->factual_size; k++)
+                for (size_t k = 0; k < array->factual_size && k <
+                     first_permutations->factual_size; k++)
                     if (compare_parents(first_permutations->trees[i], array->trees[k]) == 0) {
-                        bool = 0; // если i-ое дерево первого массива совпадает с одним из уже записанный
+                    // если i-ое дерево первого массива совпадает с одним из уже записанный
+                        bool = 0;
                         break; // выходим из цикла
                     }
                 if (bool == 0)
                     break; // и убираем из рассмотрения i-ое дерево первого массива
-                add_tree_to_tree_array(array, first_permutations->trees[i]); // иначе - добавляем дерево
+                // иначе - добавляем дерево
+                add_tree_to_tree_array(array, first_permutations->trees[i]);
             }
             else {
                 u_char bool = 1; // исключаем дубликаты
-                for (size_t k = 0; k < array->factual_size && k < second_permutations->factual_size; k++)
+                for (size_t k = 0; k < array->factual_size && k <
+                     second_permutations->factual_size; k++)
                     if (compare_parents(second_permutations->trees[j], array->trees[k]) == 0) {
-                        bool = 0; // если j-ое дерево первого массива совпадает с одним из уже записанный
+                    // если j-ое дерево первого массива совпадает с одним из уже записанный
+                        bool = 0;
                         break; // выходим из цикла
                     }
                 if (bool == 0)
                     continue; // и продолжаем ход по вотрому массиву
-                add_tree_to_tree_array(&(*array), second_permutations->trees[j]); // иначе - добавляем дерево
+                // иначе - добавляем дерево
+                add_tree_to_tree_array(&(*array), second_permutations->trees[j]);
             }
         }
 }
@@ -413,7 +422,8 @@ void form_new_move(chess_coord_tree* tree, size_t level) {
 
 chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_coord two,
                                      figure_info second) {
-    chess_coord_tree_array* array = (chess_coord_tree_array*)calloc(1, sizeof(chess_coord_tree_array));
+    chess_coord_tree_array* array;
+    array = (chess_coord_tree_array*)calloc(1, sizeof(chess_coord_tree_array));
     alloc_tree_array(array, 0); // создаем массив совпадающих ходов
 
     chess_coord_tree* first_tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
@@ -421,8 +431,10 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
     chess_coord_tree* second_tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     alloc_tree(second_tree, two, NULL, second, 0); // дерево ходов 2-ой фигуры
 
-    chess_coord_tree_array one_level_array; // временный массив для извлечения и последующего анализа хода 1-ой фигуры
-    chess_coord_tree_array two_level_array; // временный массив для извлечения и последующего анализа хода 2-ой фигуры
+    // временный массив для извлечения и последующего анализа хода 1-ой фигуры
+    chess_coord_tree_array one_level_array;
+    // временный массив для извлечения и последующего анализа хода 2-ой фигуры
+    chess_coord_tree_array two_level_array;
 
     size_t i = 1; // пока в массиве совпадающих ходов ничего нет
     while (array->factual_size == 0) {
@@ -442,7 +454,8 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
             free_tree(second_tree);
             return NULL;
         }
-        compare_steps(&one_level_array, &two_level_array, array, 2); // сравниваем ходы
+        // сравниваем ходы
+        compare_steps(&one_level_array, &two_level_array, array, 2);
         if (array->factual_size != 0) // если в результате нашлись совпадающие координаты
             return array; // возвращаем массив
 
@@ -469,18 +482,22 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
 void compare_step (chess_coord_tree_array* permutations, chess_coord coord,
                    chess_coord_tree_array* array) {
     for (size_t i = 0; i < permutations->factual_size; i++) // идем по массиву ходов
-        if (compare_coords(permutations->trees[i]->coord, coord) == 1) // если координаты совпали
-            add_tree_to_tree_array(array, permutations->trees[i]); // добавляем указатель на дерево
+        // если координаты совпали
+        if (compare_coords(permutations->trees[i]->coord, coord) == 1)
+            // добавляем указатель на дерево
+            add_tree_to_tree_array(array, permutations->trees[i]);
 }
 
 chess_coord_tree_array* get_way(chess_coord coord, chess_coord aim, figure_info info) {
-    chess_coord_tree_array* array = (chess_coord_tree_array*)calloc(1, sizeof(chess_coord_tree_array));
+    chess_coord_tree_array* array;
+    array = (chess_coord_tree_array*)calloc(1, sizeof(chess_coord_tree_array));
     alloc_tree_array(array, 0); // создаем массив совпадающих ходов
 
     chess_coord_tree* tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     alloc_tree(tree, coord, NULL, info, 0); // дерево ходов фигуры
 
-    chess_coord_tree_array level_array; // временный массив для извлечения и последующего анализа хода фигуры
+    // временный массив для извлечения и последующего анализа хода фигуры
+    chess_coord_tree_array level_array;
 
     size_t i = 1; // пока в массиве совпадающих ходов ничего нет
     while (array->factual_size == 0) {
