@@ -1,6 +1,8 @@
-#include "DataStructures/IntArray.h"
+#include "Chess/Chess.h"
 
 int main() {
-    test_int_array();
+    //check_permutations();
+    //check_way();
+    check_meet_pos();
     return 0;
 }

@@ -4,9 +4,9 @@
 #include <ctype.h>
 
 typedef struct figure_info {
-    int direction_up;
-    int num_figure;
-    int figure_code;
+    size_t direction_up;
+    size_t num_figure;
+    size_t figure_code;
 } figure_info;
 
 void input_figure_info(figure_info* info) {
@@ -14,9 +14,9 @@ void input_figure_info(figure_info* info) {
     char figure_name[7];
     scanf("%s", figure_name);
 
-    int i = 0;
+    size_t i = 0;
     while (figure_name[i] != '\0') {
-        figure_name[i] = tolower(figure_name[i]);
+        figure_name[i] = (char)tolower(figure_name[i]);
         i++;
     }
 
@@ -40,7 +40,7 @@ void input_figure_info(figure_info* info) {
         char direction[5];
         scanf("%s", direction);
 
-        int j = 0;
+        size_t j = 0;
         while (direction[j] != '\0') {
             direction[j] = (char) tolower(direction[j]);
             j++;

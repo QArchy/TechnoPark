@@ -1,6 +1,5 @@
 #ifndef CHESS_SETTINGS_H
 #define CHESS_SETTINGS_H
-#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include "figure_info.h"
