@@ -2,65 +2,64 @@
 #define TECHNOPARK_CHESS_COORD_TREE_ARRAY_H
 
 typedef struct chess_coord_tree_array {
-    struct chess_coord_tree** trees;
-    size_t size;
-    size_t factual_size;
+    struct chess_coord_tree** trees; // массив указателей на деревья
+    size_t size; // размер (сколько выделено)
+    size_t factual_size; // фактический размер (сколько записано)
 } chess_coord_tree_array;
 
 void alloc_tree_array(chess_coord_tree_array* array, size_t size) {
-    array->size = size;
-    array->factual_size = 0;
-    array->trees = (chess_coord_tree**)calloc(array->size, sizeof(chess_coord_tree*));
+    array->size = size; // записываем размер
+    array->factual_size = 0; // в массиве нет элементов
+    array->trees = (chess_coord_tree**)calloc(array->size, sizeof(chess_coord_tree*)); // выделение памяти
 }
 
 void free_tree_array(chess_coord_tree_array* array) {
-    free(array->trees);
+    free(array->trees); // освобождаем память
 }
 
 void full_free_tree_array(chess_coord_tree_array* array) {
-    for (size_t i = 0; i < array->factual_size; i++)
-        free_tree(get_root(array->trees[i]));
-    free(array->trees);
-    free(array);
+    for (size_t i = 0; i < array->factual_size; i++) // освобождаем память
+        free_tree(get_root(array->trees[i])); // из под всех записанный деревьев
+    free(array->trees); // и из под массива
 }
 
 void resize_tree_array(chess_coord_tree_array* array, size_t new_size) {
-    chess_coord_tree_array tmp;
-    alloc_tree_array(&tmp, array->size);
-    for (size_t i = 0; i < array->factual_size; i++)
+    chess_coord_tree_array tmp; // создаем временный массив
+    alloc_tree_array(&tmp, array->size); // того же размера
+    for (size_t i = 0; i < array->factual_size; i++) // копируем в него исходный
         tmp.trees[i] = array->trees[i];
     tmp.factual_size = array->factual_size;
 
-    free_tree_array(array);
-    alloc_tree_array(array, new_size);
+    free_tree_array(array); // чистим и сразу же пересоздаем исходный
+    alloc_tree_array(array, new_size); // массив с новым размером
 
-    if (tmp.factual_size != 0) {
-        if (new_size >= tmp.factual_size)
-            for (size_t i = 0; i < tmp.size; i++)
-                array->trees[i] = tmp.trees[i];
-        else
-            for (size_t i = 0; i < new_size; i++)
-                array->trees[i] = tmp.trees[i];
+    if (tmp.factual_size != 0) { // если есть что копироватт
+        if (new_size >= tmp.factual_size) // и размер увеличивается
+            for (size_t i = 0; i < tmp.size; i++) // копируем весь временный
+                array->trees[i] = tmp.trees[i]; // массив в исходный
+        else // если размер уменьшается
+            for (size_t i = 0; i < new_size; i++) // копируем n = new_size
+                array->trees[i] = tmp.trees[i]; // элементов в исходный массив
     }
     array->factual_size = tmp.factual_size;
 }
 
 void add_tree_to_tree_array(chess_coord_tree_array* array, chess_coord_tree* tree) {
-    if (array->factual_size == array->size)
-        resize_tree_array(array, array->size + array->size / 10 + 1);
-    array->trees[array->factual_size++] = tree;
+    if (array->factual_size == array->size) // если места нет
+        resize_tree_array(array, array->size + array->size / 10 + 1); // увеличиваем размер
+    array->trees[array->factual_size++] = tree; // записываем указатель на дерево
 }
 
 void output_leaf(chess_coord_tree* leaf, size_t step) {
-    if (leaf == NULL)
-        return;
-    output_leaf(leaf->parent, step - 1);
+    if (leaf == NULL) // если узел пуст
+        return; // выходим из рекурсии
+    output_leaf(leaf->parent, step - 1); // идем вверх по дереву
 
-    for (size_t i = 0; i < step - 1; i++)
+    for (size_t i = 0; i < step - 1; i++) // красивая табуляция
         putchar('\t');
 
-    if (leaf->info.figure_code == PAWN)
-        printf("%d Pawn's step#%zu\n", leaf->info.num_figure, step);
+    if (leaf->info.figure_code == PAWN) // в зависимости от кода фигуры выводим нужное
+        printf("%d Pawn's step#%zu\n", leaf->info.num_figure, step); // сообщение
     else if (leaf->info.figure_code == KNIGHT)
         printf("%d Knight's step#%zu\n", leaf->info.num_figure, step);
     else if (leaf->info.figure_code == KING)
@@ -71,15 +70,15 @@ void output_leaf(chess_coord_tree* leaf, size_t step) {
         printf("%d Bishop's step#%zu\n", leaf->info.num_figure, step);
     else printf("%d Rook's step#%zu\n", leaf->info.num_figure, step);
 
-    for (size_t i = 0; i < step; i++)
+    for (size_t i = 0; i < step; i++) // красивая табуляция
         putchar('\t');
-    output_chess_coord(leaf->coord);
+    output_chess_coord(leaf->coord); // вывод координаты (хода)
 }
 
 void output_tree_array(chess_coord_tree_array* array) {
-    for (size_t i = 0; i < array->factual_size; i++) {
-        output_leaf(array->trees[i], get_height(array->trees[i]));
-        putchar('\n');
+    for (size_t i = 0; i < array->factual_size; i++) { // выводим все записанные деревья
+        output_leaf(array->trees[i], get_height(array->trees[i])); // и их родителей
+        putchar('\n'); // с красивым форматированием
     }
 }
 
