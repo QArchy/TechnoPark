@@ -28,15 +28,25 @@ void free_tree(chess_coord_tree* tree) {
         return;
 
     tree->parent = NULL;
-    for (size_t i = 0; i < tree->num_children; i++)
+    for(size_t i = 0; i < tree->num_children; i++) {
         free_tree(tree->children[i]);
+        free(tree->children[i]);
+    }
     free(tree->children);
+    tree->num_children = 0;
+    tree->children = NULL;
 }
 
 int get_height(chess_coord_tree* bottom_leaf) {
     if(bottom_leaf == NULL)
         return 0;
     return 1 + get_height(bottom_leaf->parent);
+}
+
+chess_coord_tree* get_root(chess_coord_tree* bottom_leaf) {
+    if (bottom_leaf->parent == NULL)
+        return bottom_leaf;
+    return get_root(bottom_leaf->parent);
 }
 
 #endif //TECHNOPARK_CHESS_COORD_TREE_H

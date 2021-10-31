@@ -2,14 +2,14 @@
 #define TECHNOPARK_CHESS_H
 #include <stdlib.h>
 #pragma region Constants
-const size_t MIN_N = 1;
-const size_t MAX_N = 8;
-const size_t PAWN = 1;
-const size_t KNIGHT = 2;
-const size_t KING = 3;
-const size_t QUEEN = 4;
-const size_t BISHOP = 5;
-const size_t ROOK = 6;
+const int MIN_N = 1;
+const int MAX_N = 8;
+const int PAWN = 1;
+const int KNIGHT = 2;
+const int KING = 3;
+const int QUEEN = 4;
+const int BISHOP = 5;
+const int ROOK = 6;
 #pragma endregion
 #include "DataStructures.h"
 #pragma region Standart_Functions
@@ -339,12 +339,11 @@ chess_coord_array* get_permutations(chess_coord coord, figure_info info) {
         return get_bishop_permutations(coord);
     else if (info.figure_code == ROOK)
         return get_rook_permutations(coord);
-
     return NULL;
 }
 #pragma endregion
 #pragma region MeetAlgo
-size_t compare_parents(chess_coord_tree* tree_1, chess_coord_tree* tree_2) {
+u_char compare_parents(chess_coord_tree* tree_1, chess_coord_tree* tree_2) {
     if (tree_1 == NULL || tree_2 == NULL)
         return 0;
     if (tree_1->coord.digit == tree_2->coord.digit && tree_1->coord.letter == tree_2->coord.letter)
@@ -361,7 +360,7 @@ void compare_steps(chess_coord_tree_array* first_permutations, chess_coord_tree_
                 first_permutations->trees[i]->coord.letter != second_permutations->trees[j]->coord.letter)
                 continue;
             if (whose_move == 1) {
-                size_t bool = 1;
+                u_char bool = 1;
                 for (size_t k = 0; k < array->factual_size && k < first_permutations->factual_size; k++)
                     if (compare_parents(first_permutations->trees[i], array->trees[k]) == 0) {
                         bool = 0;
@@ -372,7 +371,7 @@ void compare_steps(chess_coord_tree_array* first_permutations, chess_coord_tree_
                 add_tree_to_tree_array(array, first_permutations->trees[i]);
             }
             else {
-                size_t bool = 1;
+                u_char bool = 1;
                 for (size_t k = 0; k < array->factual_size && k < second_permutations->factual_size; k++)
                     if (compare_parents(second_permutations->trees[j], array->trees[k]) == 0) {
                         bool = 0;
@@ -417,7 +416,7 @@ chess_coord_tree_array* get_meet_pos(chess_coord one, figure_info first, chess_c
 
     chess_coord_tree* first_tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     alloc_tree(first_tree, one, NULL, first,0);
-    chess_coord_tree* second_tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));;
+    chess_coord_tree* second_tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     alloc_tree(second_tree, two, NULL, second, 0);
 
     chess_coord_tree_array one_level_array;
@@ -475,7 +474,7 @@ chess_coord_tree_array* get_way(chess_coord coord, chess_coord aim, figure_info 
     chess_coord_tree_array* array = (chess_coord_tree_array*)calloc(1, sizeof(chess_coord_tree_array));
     alloc_tree_array(array, 0);
 
-    chess_coord_tree* tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));;
+    chess_coord_tree* tree = (chess_coord_tree*)calloc(1, sizeof(chess_coord_tree));
     alloc_tree(tree, coord, NULL, info, 0);
 
     chess_coord_tree_array level_array;
@@ -564,16 +563,16 @@ void check_way() {
     input_chess_coord(&aim);
 
     if (figure.figure_code == PAWN)
-        printf("Pawn's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
+        printf("Pawn's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
     else if (figure.figure_code == KNIGHT)
-        printf("Knight's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
+        printf("Knight's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
     else if (figure.figure_code == KING)
-        printf("King's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
+        printf("King's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
     else if (figure.figure_code == QUEEN)
-        printf("Queen's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
+        printf("Queen's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
     else if (figure.figure_code == BISHOP)
-        printf("Bishop's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
-    else printf("Rook's way to [%zu;%c]: \n", aim.digit, (char)aim.letter + 64);
+        printf("Bishop's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
+    else printf("Rook's way to [%d;%c]: \n", aim.digit, (char)aim.letter + 64);
 
     chess_coord_tree_array* array = get_way(coord, aim, figure);
     if (array == NULL)
@@ -593,21 +592,16 @@ void check_meet_pos() {
 
     input_figure_info(&first_figure);
     chess_coord one;
-    if (first_figure.figure_code == PAWN) {
+    if (first_figure.figure_code == PAWN)
         printf("Input first figure (pawn) coord : \n");
-    }
-    else if (first_figure.figure_code == KNIGHT) {
+    else if (first_figure.figure_code == KNIGHT)
         printf("Input first figure (knight) coord : \n");
-    }
-    else if (first_figure.figure_code == KING) {
+    else if (first_figure.figure_code == KING)
         printf("Input first figure (king) coord : \n");
-    }
-    else if (first_figure.figure_code == QUEEN) {
+    else if (first_figure.figure_code == QUEEN)
         printf("Input first figure (queen) coord : \n");
-    }
-    else if (first_figure.figure_code == BISHOP) {
+    else if (first_figure.figure_code == BISHOP)
         printf("Input first figure (bishop) coord : \n");
-    }
     else printf("Input first figure (rook) coord : \n");
     input_chess_coord(&one);
 

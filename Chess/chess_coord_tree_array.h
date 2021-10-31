@@ -19,7 +19,7 @@ void free_tree_array(chess_coord_tree_array* array) {
 
 void full_free_tree_array(chess_coord_tree_array* array) {
     for (size_t i = 0; i < array->factual_size; i++)
-        free_tree(array->trees[i]);
+        free_tree(get_root(array->trees[i]));
     free(array->trees);
     free(array);
 }
@@ -60,16 +60,16 @@ void output_leaf(chess_coord_tree* leaf, size_t step) {
         putchar('\t');
 
     if (leaf->info.figure_code == PAWN)
-        printf("%zu Pawn's step#%zu\n", leaf->info.num_figure, step);
+        printf("%d Pawn's step#%zu\n", leaf->info.num_figure, step);
     else if (leaf->info.figure_code == KNIGHT)
-        printf("%zu Knight's step#%zu\n", leaf->info.num_figure, step);
+        printf("%d Knight's step#%zu\n", leaf->info.num_figure, step);
     else if (leaf->info.figure_code == KING)
-        printf("%zu King's step#%zu\n", leaf->info.num_figure, step);
+        printf("%d King's step#%zu\n", leaf->info.num_figure, step);
     else if (leaf->info.figure_code == QUEEN)
-        printf("%zu Queen's step#%zu\n", leaf->info.num_figure, step);
+        printf("%d Queen's step#%zu\n", leaf->info.num_figure, step);
     else if (leaf->info.figure_code == BISHOP)
-        printf("%zu Bishop's step#%zu\n", leaf->info.num_figure, step);
-    else printf("%zu Rook's step#%zu\n", leaf->info.num_figure, step);
+        printf("%d Bishop's step#%zu\n", leaf->info.num_figure, step);
+    else printf("%d Rook's step#%zu\n", leaf->info.num_figure, step);
 
     for (size_t i = 0; i < step; i++)
         putchar('\t');

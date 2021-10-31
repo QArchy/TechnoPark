@@ -4,15 +4,16 @@
 #include <ctype.h>
 
 typedef struct figure_info {
-    size_t direction_up;
-    size_t num_figure;
-    size_t figure_code;
+    int direction_up;
+    int num_figure;
+    int figure_code;
 } figure_info;
 
-void input_figure_info(figure_info* info) {
+void input_figure_info(figure_info* const info) {
     printf("Input figure name (in english) : ");
     char figure_name[7];
     scanf("%s", figure_name);
+    getchar();
 
     size_t i = 0;
     while (figure_name[i] != '\0') {
