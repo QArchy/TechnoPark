@@ -1,5 +1,6 @@
 #ifndef TECHNOPARK_SIMPLY_LINKED_LIST_H
 #define TECHNOPARK_SIMPLY_LINKED_LIST_H
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,24 +11,34 @@ typedef struct SimplyLinkedListNode {
 
 typedef struct SimplyLinkedList {
     SimplyLinkedListNode* head; // указатель на начало
-    SimplyLinkedListNode* tail; // флаг конца списка
+    SimplyLinkedListNode* tail; // указатель на конец
 } SimplyLinkedList;
 
-void init_slist(SimplyLinkedList* lst) { // выделяем память под новый элемент в head
-    lst->tail = lst->head = (SimplyLinkedListNode*)calloc(1, sizeof(SimplyLinkedListNode));
-    lst->head->pnext = NULL; // зануляем указатель на следующий элемент
+void init_slist(SimplyLinkedList* lst) {
+    // записываем head и tail NULL
+    lst->tail = lst->head = NULL;
 }
 
-void add_to_slist(SimplyLinkedList* lst, int el) { // выделяем память в tail->next
+void add_to_slist(SimplyLinkedList* lst, int el) {
+    if (lst->head == NULL) { // если список пуст
+        // выделяем память под новый узел
+        lst->head = (SimplyLinkedListNode*)calloc(1, sizeof(SimplyLinkedListNode));
+        lst->head->data = el; // записываем данные
+        lst->head->pnext = NULL; // указатель на следующий узел стави в NULL
+        lst->tail = lst->head; // ставим tail на head
+        return;
+    }
+    // выделяем память в tail->next
     lst->tail->pnext = (SimplyLinkedListNode*)calloc(1, sizeof(SimplyLinkedListNode));
-    lst->tail->data = el; // записывает в конец данные
-    lst->tail = lst->tail->pnext; // двигаем флаг конца списка вперед
+    lst->tail->pnext->data = el; // записываем данные в новый узел
+    lst->tail = lst->tail->pnext; // двигаем tail на новы элемент
     lst->tail->pnext = NULL; // зануляем указатель на следующий элемент
 }
 
 int slist_contains(SimplyLinkedList* lst, int el) {
+    assert(lst->head != NULL); // если список пуст - все плохо
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
-    while (tmp != lst->tail) { // пока не дошли до конца
+    while (tmp != NULL) { // пока не дошли до конца
         if (tmp->data == el) // ищем элемент
             return 1;
         tmp = tmp->pnext; // идем вперед
@@ -36,19 +47,25 @@ int slist_contains(SimplyLinkedList* lst, int el) {
 }
 
 int slist_assign(SimplyLinkedList* lst, size_t ind, int el) {
+    assert(lst->head != NULL);
+    if (ind == 0) { // если элемент в начале
+        lst->head->data = el;
+        return 1;
+    }
+
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
-    while (ind != 1) { // пока не дошли до нужного элемента
-        if (tmp == lst->tail) // проверка выхода за границы списка
-            return -1;
+    while (ind > 0) { // пока не нашли нужный узел
+        if (tmp == NULL) // если дошли до конца
+            return -1; // неудача
         tmp = tmp->pnext; // идем вперед
         ind--;
     }
-    tmp->data = el; // записываем значение
+    tmp->data = el; // записывае м данные
     return 1;
 }
 
 void slist_clear(SimplyLinkedList* lst) {
-    while (lst->head != lst->tail) { // пока не дошли до конца
+    while (lst->head != NULL) { // пока не дошли до конца
         SimplyLinkedListNode* tmp = lst->head; // запоминаем head
         lst->head = lst->head->pnext; // двигаем head вперед
         free(tmp); // чистим память из под бывшего начала
@@ -57,12 +74,11 @@ void slist_clear(SimplyLinkedList* lst) {
 }
 
 int slist_remove_el(SimplyLinkedList* lst, int el) {
-    if (lst->head == lst->tail) // если список пуст
-        return -1; // неудача
+    assert(lst->head != NULL);
     if (lst->head->data == el) { // если элемент в начале
         if (lst->head->pnext == lst->tail) { // и единстенный
             free(lst->head); // чистим глову
-            lst->head = lst->tail; // восстанавливаем состояние списка до вызова функции init
+            lst->head = lst->tail = NULL; // восстанавливаем состояние списка до вызова функции init
             return 1;
         }
         SimplyLinkedListNode* tmp = lst->head; // запоминаем head
@@ -74,12 +90,12 @@ int slist_remove_el(SimplyLinkedList* lst, int el) {
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
     while (tmp->pnext->data != el) { // пока следующий элемент не искомый
         tmp = tmp->pnext; // идем вперед
-        if (tmp->pnext == lst->tail) // если элемента нет
+        if (tmp->pnext == NULL) // если элемента нет
             return -1; // неудача
     }
-    if (tmp->pnext->pnext == lst->tail) { // если элемент в конце
+    if (tmp->pnext == lst->tail) { // если элемент в конце
         free(lst->tail); // чистим конец
-        lst->tail = tmp->pnext; // двигаем tail назад
+        lst->tail = tmp; // двигаем tail назад
         lst->tail->pnext = NULL; // обновляем поле tail->next
         return 1;
     } // если элемент в середине
@@ -89,14 +105,38 @@ int slist_remove_el(SimplyLinkedList* lst, int el) {
     return 1;
 }
 
+int* get_first(SimplyLinkedList* lst) {
+    assert(lst->head != NULL);
+    return &lst->head->data; // возвращаем 1-ый элемент
+}
+
+int* get_last(SimplyLinkedList* lst) {
+    assert(lst->head != NULL);
+    return &lst->tail->data; // возвращаем последний элемент
+}
+
+int* get(SimplyLinkedList* lst, size_t ind) {
+    assert(lst->head != NULL);
+    if (ind == 0) // если элемент в начале
+        return &lst->head->data; // возвращаем первый элемент
+
+    SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
+    while (ind > 0) { // пока индекс больше нуля
+        tmp = tmp->pnext; // идем вперед
+        assert(tmp != NULL);
+        ind--;
+    }
+    return &tmp->data;
+}
+
 void print_slist(SimplyLinkedList* lst) {
-    if (lst->head == lst->tail) { // если список пуст
+    if (lst->head == NULL) { // если список пуст
         printf("List is empty\n"); // то он пуст
         return;
     }
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
     putchar('[');
-    while(tmp != lst->tail) { // пока не дошли до конца
+    while(tmp !=  NULL) { // пока не дошли до конца
         printf("%d", tmp->data); // выводим данные
         tmp = tmp->pnext;
     }
@@ -106,21 +146,8 @@ void print_slist(SimplyLinkedList* lst) {
 void test_SimplyLinkedList() {
     SimplyLinkedList lst;
     init_slist(&lst);
-    print_slist(&lst);
-    putchar('\n');
-
     slist_clear(&lst);
     init_slist(&lst);
-    print_slist(&lst);
-    putchar('\n');
-
-    printf("List remove [%d] ? >> [%d]\n", 34, slist_remove_el(&lst, 34));
-    print_slist(&lst);
-    putchar('\n');
-
-    printf("List contains [%d] ? >> [%d]\n", 34, slist_contains(&lst, 34));
-    print_slist(&lst);
-    putchar('\n');
 
     add_to_slist(&lst, 0);
     add_to_slist(&lst, 1);
