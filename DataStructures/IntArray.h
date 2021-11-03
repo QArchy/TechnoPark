@@ -28,7 +28,7 @@ void resize_int_array(IntArray* arr, const size_t new_size) { //
     IntArray tmp; // создаем временный массив
     alloc_int_array(&tmp, arr->size);
     tmp.factual_size = arr->factual_size; // копируем в него исходный
-    for (size_t i = 0; i < tmp.size; i++) {
+    for (size_t i = 0; i < tmp.factual_size; i++) {
         tmp.array[i] = arr->array[i];
     }
 
@@ -36,14 +36,25 @@ void resize_int_array(IntArray* arr, const size_t new_size) { //
     alloc_int_array(arr, new_size); // исходный массив
 
     if (tmp.factual_size != 0) { // если есть что копировать
-        if (new_size >= tmp.size) // если увеличиваем размер
-            for (int i = 0; i < tmp.size; i++) // копируем все из
+        if (new_size >= tmp.size) { // если увеличиваем размер
+            for (int i = 0; i < tmp.factual_size; i++) // копируем все из
                 arr->array[i] = tmp.array[i]; // временного
-        else // ели уменьшаем размер
-            for (int i = 0; i < arr->size; i++) // копируем n = new_size
-                arr->array[i] = tmp.array[i]; // элементов
+            arr->factual_size = tmp.factual_size;
+        }
+        else { // ели уменьшаем размер
+            // и фактический размер временного массива больше или равен new_size
+            if (tmp.factual_size >= arr->size) {
+                for (int i = 0; i < arr->size; i++) // копируем n = new_size
+                    arr->array[i] = tmp.array[i]; // элементов
+                arr->factual_size = arr->size;
+            }
+            else { // если меньше
+                for (int i = 0; i < tmp.factual_size; i++) // копируем n = new_size
+                    arr->array[i] = tmp.array[i]; // элементов
+                arr->factual_size = tmp.factual_size;
+            }
+        }
     }
-    arr->factual_size = tmp.factual_size;
 
     free_int_array(&tmp); // чистим временный массив
 }

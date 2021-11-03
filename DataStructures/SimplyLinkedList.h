@@ -48,11 +48,6 @@ int slist_contains(SimplyLinkedList* lst, int el) {
 
 int slist_assign(SimplyLinkedList* lst, size_t ind, int el) {
     assert(lst->head != NULL);
-    if (ind == 0) { // если элемент в начале
-        lst->head->data = el;
-        return 1;
-    }
-
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
     while (ind > 0) { // пока не нашли нужный узел
         if (tmp == NULL) // если дошли до конца
@@ -117,9 +112,6 @@ int* get_last(SimplyLinkedList* lst) {
 
 int* get(SimplyLinkedList* lst, size_t ind) {
     assert(lst->head != NULL);
-    if (ind == 0) // если элемент в начале
-        return &lst->head->data; // возвращаем первый элемент
-
     SimplyLinkedListNode* tmp = lst->head; // создаем временный итератор
     while (ind > 0) { // пока индекс больше нуля
         tmp = tmp->pnext; // идем вперед
